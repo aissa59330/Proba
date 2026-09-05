@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probas & Stats — la fiche qui explique vraiment</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2340;
+    --paper:#F2F4F9;
+    --panel:#FFFFFF;
+    --line:#DDE2ED;
+    --slate:#5B6472;
+
+    --teal:#137A75;
+    --teal-bg:#E3F3F1;
+    --amber:#C97A00;
+    --amber-bg:#FCEFDA;
+    --violet:#6947B0;
+    --violet-bg:#EEE7FA;
+    --sage:#3D7A45;
+    --sage-bg:#E5F2E4;
+    --brick:#B3502E;
+    --brick-bg:#FBE9E1;
+    --blue:#2A5FA5;
+    --blue-bg:#E4EDFA;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    color:var(--ink);
+    line-height:1.15;
+    margin:0;
+  }
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  @media (max-width: 900px){
+    .shell{grid-template-columns:1fr;}
+  }
+
+  /* ---------- sidebar ---------- */
+  .sidebar{
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    overflow-y:auto;
+    padding:32px 18px 32px 28px;
+    border-right:1px solid var(--line);
+  }
+  @media (max-width: 900px){
+    .sidebar{
+      position:static;
+      height:auto;
+      border-right:none;
+      border-bottom:1px solid var(--line);
+      padding:20px 20px 12px;
+    }
+  }
+  .brand{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:1.35rem;
+    margin-bottom:2px;
+  }
+  .brand small{
+    display:block;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:500;
+    font-size:0.78rem;
+    color:var(--slate);
+    margin-top:6px;
+  }
+  nav.toc{
+    margin-top:28px;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  @media (max-width: 900px){
+    nav.toc{
+      margin-top:14px;
+      flex-direction:row;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+  }
+  nav.toc a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:var(--slate);
+    font-size:0.87rem;
+    font-weight:500;
+    padding:7px 10px;
+    border-radius:7px;
+    transition:background .15s ease, color .15s ease;
+  }
+  nav.toc a .dot{
+    width:9px;height:9px;border-radius:50%;flex:none;
+  }
+  nav.toc a:hover{ background:#EAEDF5; color:var(--ink); }
+  nav.toc a.active{ background:var(--panel); color:var(--ink); box-shadow:0 1px 3px rgba(20,25,50,.08); }
+
+  /* ---------- main ---------- */
+  main{ padding:44px 40px 90px; min-width:0; }
+  @media (max-width: 620px){ main{ padding:28px 18px 70px; } }
+
+  .hero{
+    padding-bottom:28px;
+    border-bottom:2px solid var(--ink);
+    margin-bottom:38px;
+  }
+  .hero h1{ font-size:2.5rem; font-weight:700; letter-spacing:-.01em; }
+  .hero p{ margin:12px 0 0; color:var(--slate); font-size:1.05rem; max-width:56ch; }
+
+  section{ margin-bottom:58px; scroll-margin-top:20px; }
+  section > h2{
+    font-size:1.55rem;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .kicker{
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--slate);
+    margin-bottom:6px;
+  }
+  section > p.lede{ color:var(--slate); max-width:66ch; margin:10px 0 22px; }
+
+  h3.sub{
+    font-family:'Fraunces', serif;
+    font-size:1.12rem;
+    font-weight:600;
+    margin:26px 0 12px;
+  }
+
+  /* ---------- callout card ---------- */
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:5px solid var(--c, var(--blue));
+    border-radius:10px;
+    padding:18px 22px;
+    margin:14px 0;
+    box-shadow:0 1px 2px rgba(20,25,50,.03);
+  }
+  .card .tag{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.03em;
+    color:var(--c, var(--blue));
+    background:var(--cbg, var(--blue-bg));
+    padding:3px 10px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .card p{ margin:8px 0; }
+  .card p:first-of-type{ margin-top:0; }
+  .card p:last-child{ margin-bottom:0; }
+  .card ul{ margin:8px 0 0; padding-left:1.1em; }
+  .card li{ margin-bottom:5px; }
+
+  .card.teal{ --c:var(--teal); --cbg:var(--teal-bg); }
+  .card.amber{ --c:var(--amber); --cbg:var(--amber-bg); }
+  .card.violet{ --c:var(--violet); --cbg:var(--violet-bg); }
+  .card.sage{ --c:var(--sage); --cbg:var(--sage-bg); }
+  .card.brick{ --c:var(--brick); --cbg:var(--brick-bg); }
+  .card.blue{ --c:var(--blue); --cbg:var(--blue-bg); }
+
+  /* ---------- formula block ---------- */
+  .formula{
+    background:var(--ink);
+    color:#fff;
+    border-radius:10px;
+    padding:20px 24px;
+    text-align:center;
+    margin:16px 0;
+    overflow-x:auto;
+  }
+  .formula .katex{ color:#fff; font-size:1.15em; }
+
+  /* ---------- tables ---------- */
+  table.ref{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0 8px;
+    font-size:.92rem;
+  }
+  table.ref th{
+    background:var(--ink);
+    color:#fff;
+    text-align:left;
+    padding:10px 14px;
+    font-weight:600;
+    font-size:.82rem;
+  }
+  table.ref td{
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  table.ref tr:last-child td{ border-bottom:none; }
+  table.ref tbody tr:nth-child(odd){ background:#FAFBFD; }
+  table.ref code, .card code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85em;
+    background:#EEF1F7;
+    padding:1px 5px;
+    border-radius:4px;
+  }
+
+  /* two-column question/answer grid for dénombrement matrix */
+  .matrix{
+    display:grid;
+    grid-template-columns:1.1fr 1fr 1fr;
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    margin:18px 0;
+  }
+  .matrix > div{ background:#fff; padding:14px 16px; }
+  .matrix .head{ background:var(--ink); color:#fff; font-weight:600; font-size:.85rem; }
+  .matrix .label{ font-weight:600; font-size:.9rem; background:#F6F7FB; }
+  .matrix .formulacell{ font-family:'IBM Plex Mono', monospace; font-size:.92rem; display:flex; align-items:center; }
+  @media (max-width:640px){
+    .matrix{ grid-template-columns:1fr; }
+  }
+
+  .pillrow{ display:flex; gap:10px; flex-wrap:wrap; margin:16px 0; }
+  .pill{
+    font-size:.78rem; font-weight:600; padding:5px 12px; border-radius:999px;
+    background:#EEF1F7; color:var(--slate);
+  }
+
+  footer{
+    max-width:1180px;
+    margin:0 auto;
+    padding:30px 40px 60px;
+    color:var(--slate);
+    font-size:.85rem;
+    border-top:1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">🎲 Probas &amp; Stats
+      <small>BUT Informatique — Cours 1</small>
+    </div>
+    <nav class="toc" id="toc">
+      <a href="#denombrement"><span class="dot" style="background:var(--teal)"></span>1. Dénombrement</a>
+      <a href="#probas-base"><span class="dot" style="background:var(--blue)"></span>2. Probabilités de base</a>
+      <a href="#bayes"><span class="dot" style="background:var(--violet)"></span>3. Formule de Bayes</a>
+      <a href="#variables"><span class="dot" style="background:var(--sage)"></span>4. Variables aléatoires</a>
+      <a href="#binomiale"><span class="dot" style="background:var(--amber)"></span>5. Loi binomiale</a>
+      <a href="#normale"><span class="dot" style="background:var(--brick)"></span>6. Loi normale</a>
+      <a href="#resume"><span class="dot" style="background:var(--ink)"></span>🚀 Résumé express</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <h1>La fiche qui explique <em>vraiment</em> les formules</h1>
+      <p>Pour chaque notion : la question à te poser, un exemple avec des vrais chiffres, puis la formule — jamais l'inverse.</p>
+    </div>
+
+    <!-- ============ 1. DÉNOMBREMENT ============ -->
+    <section id="denombrement">
+      <div class="kicker" style="color:var(--teal)">PARTIE 1</div>
+      <h2>Dénombrement — compter sans compter à la main</h2>
+      <p class="lede">Le but : savoir combien de possibilités existent, sans les lister une par une. Deux questions suffisent à trouver la bonne formule.</p>
+
+      <div class="card teal">
+        <span class="tag">❓ pose-toi ça, dans l'ordre</span>
+        <p><strong>1. L'ordre compte-t-il ?</strong> (ABC et BCA sont-ils différents ?)</p>
+        <p><strong>2. Peut-on répéter un élément ?</strong> (le même chiffre / la même personne peut revenir ?)</p>
+      </div>
+
+      <div class="matrix">
+        <div class="head"></div>
+        <div class="head">AVEC répétition</div>
+        <div class="head">SANS répétition</div>
+        <div class="label">ORDONNÉ<br><span style="font-weight:400;color:var(--slate);font-size:.82rem">l'ordre compte</span></div>
+        <div class="formulacell" data-tex="n^k"></div>
+        <div class="formulacell" data-tex="\dfrac{n!}{(n-k)!}"></div>
+        <div class="label">NON ORDONNÉ<br><span style="font-weight:400;color:var(--slate);font-size:.82rem">l'ordre compte pas</span></div>
+        <div class="formulacell" style="color:var(--slate);font-family:'IBM Plex Sans'">— hors programme</div>
+        <div class="formulacell" data-tex="\dfrac{n!}{k!(n-k)!}"></div>
+      </div>
+
+      <h3 class="sub">Un exemple pour chaque case</h3>
+
+      <div class="card blue">
+        <span class="tag">🔢 ordonné + avec répétition → nᵏ</span>
+        <p>Un code PIN à 4 chiffres (0 à 9). L'ordre compte (1234 ≠ 4321) et on peut répéter un chiffre (1111 est valide).</p>
+        <p>→ 10 choix pour chaque chiffre, 4 chiffres : <span data-tex="10\times10\times10\times10=10^4=10\,000"></span> codes possibles.</p>
+        <p style="color:var(--slate);font-size:.88rem">Mot-clé : mot de passe, code, plaque, identifiant.</p>
+      </div>
+
+      <div class="card blue">
+        <span class="tag">🏆 ordonné + sans répétition → n!/(n−k)!</span>
+        <p>Le podium (1er, 2e, 3e) d'une course à 12 coureurs. L'ordre compte, et un coureur ne peut pas être à deux places à la fois.</p>
+        <p>→ on « consomme » un coureur à chaque étape : <span data-tex="12\times11\times10=1320"></span> podiums possibles.</p>
+        <p style="color:var(--slate);font-size:.88rem">Mot-clé : classement, podium, tirage successif sans remise.</p>
+      </div>
+
+      <div class="card blue">
+        <span class="tag">👥 non ordonné + sans répétition → n!/(k!(n−k)!)</span>
+        <p>Choisir 3 personnes parmi 12 pour un jury (pas de 1er/2e/3e, juste un groupe). L'ordre ne compte plus.</p>
+        <p>→ on reprend le calcul du podium (1320) et on divise par les <span data-tex="3!=6"></span> façons de ranger 3 personnes entre elles : <span data-tex="1320/6=220"></span> jurys possibles.</p>
+        <p style="color:var(--slate);font-size:.88rem">Mot-clé : équipe, jury, tirage au sort d'un groupe, « parmi ».</p>
+      </div>
+
+      <div class="card sage">
+        <span class="tag">⭐ cas particuliers utiles</span>
+        <p><strong>Permutation</strong> (k = n, sans répétition) : ranger 5 livres différents sur une étagère → <span data-tex="5!=120"></span> façons.</p>
+        <p><strong>Toutes les parties d'un ensemble</strong> à n éléments : <span data-tex="2^n"></span>. Exemple : 10 options indépendantes dans un fichier de config → <span data-tex="2^{10}=1024"></span> combinaisons à tester.</p>
+      </div>
+    </section>
+
+    <!-- ============ 2. PROBAS DE BASE ============ -->
+    <section id="probas-base">
+      <div class="kicker" style="color:var(--blue)">PARTIE 2</div>
+      <h2>Probabilités de base</h2>
+
+      <div class="card blue">
+        <span class="tag">🎯 l'idée de base</span>
+        <p>Quand tous les résultats ont autant de chance de sortir (dé équilibré, tirage au hasard...), une probabilité est juste une fraction :</p>
+      </div>
+      <div class="formula" data-tex="P(A)=\dfrac{\text{nombre de cas qui m'intéressent}}{\text{nombre de cas possibles au total}}"></div>
+      <p class="lede" style="margin-top:-4px">Exemple : lancer un dé, on veut un nombre pair. Cas favorables {2,4,6} → 3. Cas possibles → 6. <span data-tex="P(\text{pair})=3/6=0{,}5"></span>, une chance sur deux.</p>
+
+      <div class="card amber">
+        <span class="tag">⚠️ attention</span>
+        <p>Cette formule ne marche <strong>que</strong> si c'est équiprobable. Il faut le justifier (« dé équilibré », « tirage au hasard ») — jamais le supposer sans le dire.</p>
+      </div>
+
+      <h3 class="sub">Les règles à connaître</h3>
+      <table class="ref">
+        <thead><tr><th>Règle</th><th>Formule</th><th>Ça sert quand…</th></tr></thead>
+        <tbody>
+          <tr><td>Événement contraire</td><td><span data-tex="P(\bar A)=1-P(A)"></span></td><td>« au moins un » → passe par le contraire, presque toujours plus simple</td></tr>
+          <tr><td>Union (A ou B)</td><td><span data-tex="P(A\cup B)=P(A)+P(B)-P(A\cap B)"></span></td><td>on veut la proba que A OU B arrive</td></tr>
+          <tr><td>Événements incompatibles</td><td><span data-tex="P(A\cup B)=P(A)+P(B)"></span></td><td>A et B ne peuvent jamais arriver ensemble</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card blue">
+        <span class="tag">🎂 le paradoxe des anniversaires</span>
+        <p>Dans un groupe de 23 personnes, quelle est la proba qu'au moins 2 partagent leur date d'anniversaire ?</p>
+        <p>Plutôt que de calculer « au moins 2 identiques » directement (compliqué), on calcule le contraire — « toutes les dates sont différentes » — puis on fait <span data-tex="1-\text{ça}"></span>.</p>
+        <p><strong>Résultat : environ 50,7 % !</strong> Plus d'une chance sur deux, avec seulement 23 personnes. C'est le même principe qui rend les collisions de hachage plus fréquentes qu'on ne le pense.</p>
+      </div>
+
+      <h3 class="sub">Probabilité conditionnelle : « sachant que… »</h3>
+      <div class="card blue">
+        <span class="tag">🔍 l'idée</span>
+        <p>Conditionner, c'est réduire l'univers. Dès qu'on te dit « sachant que », ton monde de résultats possibles rétrécit à ce qui est déjà connu.</p>
+      </div>
+      <div class="formula" data-tex="P(A \mid B)=\dfrac{P(A\cap B)}{P(B)}"></div>
+
+      <div class="card blue">
+        <span class="tag">🐧 exemple</span>
+        <p>Sur 100 machines : 40 sont sous Linux, dont 30 à jour. <strong>Sachant</strong> qu'une machine est sous Linux, quelle est la proba qu'elle soit à jour ?</p>
+        <p><span data-tex="P(\text{à jour} \mid \text{Linux}) = \dfrac{0{,}3}{0{,}4} = 0{,}75"></span> → 75 %.</p>
+        <p>Différent de « 30 % du parc total est Linux + à jour » : deux questions différentes, deux réponses différentes !</p>
+      </div>
+
+      <h3 class="sub">Indépendance</h3>
+      <p class="lede">A et B sont indépendants si savoir que B est arrivé ne change <strong>rien</strong> à la proba de A.</p>
+      <div class="formula" data-tex="A \text{ et } B \text{ indépendants} \iff P(A\cap B)=P(A)\times P(B)"></div>
+      <div class="card amber">
+        <span class="tag">⚠️ piège classique</span>
+        <p>Incompatible ≠ indépendant ! Si A et B sont incompatibles (ne peuvent jamais arriver ensemble) et ont chacun une proba non nulle, ils sont automatiquement <strong>dépendants</strong> : savoir que A est arrivé te dit que B ne peut plus l'être.</p>
+      </div>
+    </section>
+
+    <!-- ============ 3. BAYES ============ -->
+    <section id="bayes">
+      <div class="kicker" style="color:var(--violet)">PARTIE 3</div>
+      <h2>La formule de Bayes</h2>
+      <p class="lede">Elle sert à « retourner » un conditionnement : tu connais P(A sachant B), tu veux P(B sachant A).</p>
+      <div class="formula" data-tex="P(B \mid A)=\dfrac{P(B)\times P(A\mid B)}{P(A)}"></div>
+
+      <div class="card violet">
+        <span class="tag">🦠 l'exemple à retenir — l'antivirus qui se trompe rarement</span>
+        <p>Un antivirus détecte 99 % des fichiers infectés, et signale à tort 1 % des fichiers sains. Seulement 0,5 % des fichiers sont réellement infectés.</p>
+        <p>Un fichier est signalé comme infecté. Est-il <strong>vraiment</strong> infecté ?</p>
+        <p>Intuition fausse : « l'antivirus est fiable à 99 %, donc oui ». <strong>Réponse réelle : seulement 33 % !</strong></p>
+        <p>Pourquoi ? Il y a tellement plus de fichiers sains que de fichiers infectés que même 1 % de fausses alertes dessus représente, en nombre, presque deux fois plus d'alertes que les vraies infections détectées.</p>
+      </div>
+
+      <div class="card sage">
+        <span class="tag">✅ l'astuce pour ne jamais se planter</span>
+        <p>Ne raisonne pas en %, raisonne en <strong>nombre</strong> de fichiers sur un total fixé (ex : 100 000).</p>
+        <ul>
+          <li>500 fichiers infectés (0,5 %) → détectés à raison : <span data-tex="500\times0{,}99=495"></span></li>
+          <li>99 500 fichiers sains → signalés à tort : <span data-tex="99\,500\times0{,}01=995"></span></li>
+          <li>Total signalés : <span data-tex="495+995=1490"></span></li>
+        </ul>
+        <p>→ <span data-tex="P(\text{vraiment infecté}\mid\text{signalé})=\dfrac{495}{1490}\approx0{,}332"></span> = 33,2 %. Cette méthode « en effectifs » donne la même réponse que la formule, sans risque d'erreur de division.</p>
+      </div>
+    </section>
+
+    <!-- ============ 4. VARIABLES ALÉATOIRES ============ -->
+    <section id="variables">
+      <div class="kicker" style="color:var(--sage)">PARTIE 4</div>
+      <h2>Variables aléatoires (espérance, variance)</h2>
+      <p class="lede">Une variable aléatoire, c'est juste une fonction qui transforme un résultat du hasard en un nombre. Exemple : le gain à un jeu, le nombre de « pile » obtenus, etc.</p>
+
+      <h3 class="sub">L'espérance : la moyenne « à long terme »</h3>
+      <div class="card sage">
+        <span class="tag">🎰 exemple filé — un jeu de pari</span>
+        <p>Tu mises 1 €. Tu gagnes 5 € (donc +4 € net) avec une chance sur 10. Sinon (9 chances sur 10), tu perds ta mise (−1 €).</p>
+        <p>L'espérance, c'est la moyenne de tes gains si tu refaisais ce pari des milliers de fois :</p>
+      </div>
+      <div class="formula" data-tex="E(X)=(-1)\times0{,}9+4\times0{,}1=-0{,}5\ \texteuro"></div>
+      <p class="lede" style="margin-top:-6px">En moyenne, tu perds 50 centimes par partie — le jeu est défavorable (un jeu équitable aurait E(X) = 0). Tu ne perds jamais exactement 50 centimes en une partie : c'est une moyenne sur beaucoup de parties.</p>
+
+      <h3 class="sub">La variance et l'écart-type : à quel point ça « tremble »</h3>
+      <div class="card sage">
+        <span class="tag">📶 pourquoi ça compte autant que la moyenne</span>
+        <p>Deux serveurs ont le même temps de réponse moyen : 120 ms.</p>
+        <p><strong>Serveur A</strong> : très régulier, presque toujours entre 115 et 125 ms (écart-type 5 ms).<br>
+        <strong>Serveur B</strong> : parfois 60 ms, parfois 300 ms (écart-type 60 ms) — même moyenne, bien moins fiable !</p>
+        <p>L'écart-type mesure cette dispersion autour de la moyenne. Plus il est grand, plus les valeurs sont éparpillées.</p>
+      </div>
+      <p class="lede" style="margin-bottom:6px">Formule pratique (celle qu'on utilise vraiment) :</p>
+      <div class="formula" data-tex="V(X)=E(X^2)-[E(X)]^2 \qquad\quad \sigma(X)=\sqrt{V(X)}"></div>
+    </section>
+
+    <!-- ============ 5. BINOMIALE ============ -->
+    <section id="binomiale">
+      <div class="kicker" style="color:var(--amber)">PARTIE 5</div>
+      <h2>Loi binomiale — compter des succès</h2>
+
+      <div class="card amber">
+        <span class="tag">🎯 quand l'utiliser — 3 conditions</span>
+        <p>1) Tu répètes n fois la même expérience.<br>
+        2) Chaque fois, 2 issues possibles : succès (proba p) ou échec (proba 1−p).<br>
+        3) Les répétitions sont indépendantes.</p>
+        <p>→ Le nombre total de succès X suit alors une loi binomiale, notée B(n, p).</p>
+      </div>
+      <div class="formula" data-tex="P(X=k)=\binom{n}{k}\,p^{k}(1-p)^{n-k}"></div>
+      <p class="lede" style="margin-top:-6px">Décomposé : <code>C(n,k)</code> compte les façons de placer les k succès parmi les n essais ; <code>pᵏ</code> est la proba de ces k succès ; <code>(1−p)ⁿ⁻ᵏ</code> celle des échecs restants. On multiplie car les essais sont indépendants.</p>
+
+      <div class="card amber">
+        <span class="tag">🪙 exemple</span>
+        <p>20 lancers, p = 0,2 la proba d'un « succès » à chaque lancer.</p>
+        <p>→ B(20 ; 0,2) : en moyenne <span data-tex="E(X)=np=20\times0{,}2=4"></span> succès, écart-type <span data-tex="\sigma(X)=\sqrt{np(1-p)}\approx1{,}79"></span>.</p>
+        <p>Proba d'avoir exactement 4 succès : <span data-tex="P(X=4)\approx0{,}218"></span> (environ 22 %).</p>
+      </div>
+      <div class="formula" data-tex="E(X)=np \qquad\quad V(X)=np(1-p)"></div>
+    </section>
+
+    <!-- ============ 6. LOI NORMALE ============ -->
+    <section id="normale">
+      <div class="kicker" style="color:var(--brick)">PARTIE 6</div>
+      <h2>La loi normale — la fameuse « cloche »</h2>
+      <p class="lede">On l'utilise pour des grandeurs continues (temps, taille, tension…) réparties en cloche autour d'une moyenne m, avec un écart-type σ.</p>
+
+      <h3 class="sub">Centrer-réduire : la seule méthode à retenir</h3>
+      <div class="card brick">
+        <span class="tag">🔄 pourquoi on fait ça</span>
+        <p>Il existe une infinité de lois normales (une par couple m, σ) — impossible d'avoir une table pour chacune !</p>
+        <p>Astuce : on transforme <strong>toujours</strong> X en une variable Z « standard » (moyenne 0, écart-type 1). Une seule table (celle de Φ) suffit alors pour tous les problèmes.</p>
+      </div>
+      <div class="formula" data-tex="Z=\dfrac{X-m}{\sigma} \quad\text{suit } N(0,1)"></div>
+
+      <h3 class="sub">La méthode en 3 étapes</h3>
+      <table class="ref">
+        <tbody>
+          <tr><td style="width:40px;font-weight:700;color:var(--brick)">1</td><td>Centrer-réduire les bornes : <span data-tex="z=\dfrac{\text{borne}-m}{\sigma}"></span></td></tr>
+          <tr><td style="font-weight:700;color:var(--brick)">2</td><td>Écrire <span data-tex="P(a\le X\le b)=\Phi(z_b)-\Phi(z_a)"></span></td></tr>
+          <tr><td style="font-weight:700;color:var(--brick)">3</td><td>Lire Φ dans la table (ligne = 1er chiffre après la virgule, colonne = 2e)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card brick">
+        <span class="tag">🖥️ exemple complet</span>
+        <p>Le temps de réponse d'un serveur suit N(120 ; 20) en millisecondes. Quelle proba qu'une requête dépasse 150 ms ?</p>
+        <p><strong>Étape 1 :</strong> <span data-tex="z=\dfrac{150-120}{20}=1{,}5"></span></p>
+        <p><strong>Étape 2 :</strong> <span data-tex="P(X>150)=1-\Phi(1{,}5)"></span></p>
+        <p><strong>Étape 3 :</strong> la table donne <span data-tex="\Phi(1{,}5)=0{,}9332"></span> → <span data-tex="P(X>150)=0{,}0668"></span></p>
+        <p>→ Environ <strong>6,7 %</strong> des requêtes dépassent 150 ms, soit ~67 sur 1000.</p>
+      </div>
+
+      <div class="card amber">
+        <span class="tag">📏 astuces table &amp; valeurs à connaître</span>
+        <p>La table ne donne que Φ(z) pour z positif. Pour z négatif : <span data-tex="\Phi(-z)=1-\Phi(z)"></span>.</p>
+        <p><span data-tex="\Phi(1{,}96)=0{,}975"></span> → 95 % de chances que Z soit entre −1,96 et 1,96 (intervalle très utilisé).</p>
+        <div class="pillrow">
+          <span class="pill">68 % dans [m−σ, m+σ]</span>
+          <span class="pill">95 % dans [m−2σ, m+2σ]</span>
+          <span class="pill">99,7 % dans [m−3σ, m+3σ]</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RÉSUMÉ ============ -->
+    <section id="resume">
+      <div class="kicker" style="color:var(--ink)">EN 5 MINUTES</div>
+      <h2>🚀 Résumé express avant le contrôle</h2>
+      <table class="ref">
+        <thead><tr><th>Situation rencontrée</th><th>Formule / méthode</th></tr></thead>
+        <tbody>
+          <tr><td>Compter des possibilités</td><td>Ordre ? répétition ? → tableau <code>nᵏ / n!/(n−k)! / n!/(k!(n−k)!)</code></td></tr>
+          <tr><td>« Cas favorables / cas possibles »</td><td><span data-tex="P(A)=\text{Card}(A)/\text{Card}(\Omega)"></span> — si équiprobable</td></tr>
+          <tr><td>« au moins un… »</td><td>Passe par le contraire : <span data-tex="1-P(\text{aucun})"></span></td></tr>
+          <tr><td>« sachant que »</td><td><span data-tex="P(A\mid B)=P(A\cap B)/P(B)"></span></td></tr>
+          <tr><td>Renverser un « sachant que »</td><td>Bayes, ou compter en effectifs sur 100 000</td></tr>
+          <tr><td>Gain moyen d'un jeu</td><td><span data-tex="E(X)=\sum x_ip_i"></span></td></tr>
+          <tr><td>Dispersion autour de la moyenne</td><td><span data-tex="V(X)=E(X^2)-[E(X)]^2"></span></td></tr>
+          <tr><td>n répétitions, succès/échec</td><td>Binomiale : <span data-tex="E(X)=np,\ V(X)=np(1-p)"></span></td></tr>
+          <tr><td>Grandeur continue en cloche</td><td>Centrer-réduire puis lire Φ dans la table</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card sage" style="margin-top:20px">
+        <span class="tag">🏁 le vrai conseil</span>
+        <p>Ne mémorise pas 15 formules par cœur. Mémorise les <strong>questions</strong> à te poser (ordre ? répétition ? sachant que ? combien de répétitions ? continu ou discret ?) — la formule suit toute seule une fois la situation identifiée.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>Fiche de révision — BUT Informatique, cours de Probabilités et statistiques.</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Render all inline/data-tex formulas with KaTeX
+    document.querySelectorAll('[data-tex]').forEach(el => {
+      try {
+        katex.render(el.getAttribute('data-tex'), el, { throwOnError:false, displayMode:false });
+      } catch(e) { el.textContent = el.getAttribute('data-tex'); }
+    });
+    document.querySelectorAll('.formula[data-tex]').forEach(el => {
+      try {
+        katex.render(el.getAttribute('data-tex'), el, { throwOnError:false, displayMode:true });
+      } catch(e) {}
+    });
+
+    // Active nav highlighting
+    const links = document.querySelectorAll('nav.toc a');
+    const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = '#' + entry.target.id;
+        const link = document.querySelector(`nav.toc a[href="${id}"]`);
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-15% 0px -70% 0px' });
+    sections.forEach(s => s && obs.observe(s));
+  });
+</script>
+
+</body>
+</html>
