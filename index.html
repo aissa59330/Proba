@@ -250,6 +250,19 @@
   .matrix .head{ background:var(--ink); color:#fff; font-weight:600; font-size:.85rem; }
   .matrix .label{ font-weight:600; font-size:.9rem; background:#F6F7FB; }
   .matrix .formulacell{ font-family:'IBM Plex Mono', monospace; font-size:.92rem; display:flex; align-items:center; }
+  .matrix .name-badge{
+    display:inline-block; font-family:'IBM Plex Sans', sans-serif;
+    font-weight:700; font-size:.78rem; letter-spacing:.01em;
+    padding:3px 10px; border-radius:999px;
+    background:var(--teal-bg); color:var(--teal);
+    margin-bottom:8px;
+  }
+  .matrix .big-formula{ font-size:1.15rem; }
+  .matrix .sub-formula{
+    margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);
+    font-family:'IBM Plex Sans', sans-serif; font-size:.8rem; color:var(--slate);
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
   @media (max-width:640px){
     .matrix{ grid-template-columns:1fr; }
   }
@@ -312,10 +325,20 @@
         <div class="head">SANS répétition</div>
         <div class="label">ORDONNÉ<br><span style="font-weight:400;color:var(--slate);font-size:.82rem">l'ordre compte</span></div>
         <div class="formulacell" data-tex="n^k"></div>
-        <div class="formulacell" data-tex="\dfrac{n!}{(n-k)!}"></div>
+        <div class="formulacell" style="flex-direction:column;align-items:flex-start">
+          <span class="name-badge">Arrangement</span>
+          <span class="big-formula" data-tex="A_n^k=\dfrac{n!}{(n-k)!}"></span>
+          <div class="sub-formula">
+            <strong style="color:var(--brick)">Permutation</strong> si k = n :
+            <span data-tex="n!"></span>
+          </div>
+        </div>
         <div class="label">NON ORDONNÉ<br><span style="font-weight:400;color:var(--slate);font-size:.82rem">l'ordre compte pas</span></div>
         <div class="formulacell" style="color:var(--slate);font-family:'IBM Plex Sans'">— hors programme</div>
-        <div class="formulacell" data-tex="\dfrac{n!}{k!(n-k)!}"></div>
+        <div class="formulacell" style="flex-direction:column;align-items:flex-start">
+          <span class="name-badge" style="background:var(--violet-bg);color:var(--violet)">Combinaison</span>
+          <span class="big-formula" data-tex="\binom{n}{k}=\dfrac{n!}{k!(n-k)!}"></span>
+        </div>
       </div>
 
       <h3 class="sub">Un exemple pour chaque case</h3>
