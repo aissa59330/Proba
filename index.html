@@ -341,9 +341,26 @@
         <p style="color:var(--slate);font-size:.88rem">Mot-clé : équipe, jury, tirage au sort d'un groupe, « parmi ».</p>
       </div>
 
+      <h3 class="sub">Permutation vs combinaison : la confusion classique</h3>
+      <div class="card violet">
+        <span class="tag">🆚 le seul truc à retenir</span>
+        <p>Demande-toi : « si j'échange deux éléments entre eux, ça change le résultat ou pas ? »</p>
+        <p><strong>Oui, ça change</strong> → c'est une permutation / un arrangement (ordonné).<br>
+        <strong>Non, c'est pareil</strong> → c'est une combinaison (non ordonné).</p>
+      </div>
+
+      <table class="ref">
+        <thead><tr><th>Question posée sur 12 personnes</th><th>Modèle</th><th>Calcul</th><th>Résultat</th></tr></thead>
+        <tbody>
+          <tr><td>Le podium : qui est 1er, 2e, 3e ?</td><td>Arrangement <em>(= permutation partielle)</em></td><td><span data-tex="12\times11\times10"></span></td><td><strong>1320</strong></td></tr>
+          <tr><td>Un jury de 3, sans les classer</td><td>Combinaison</td><td><span data-tex="1320 / 3!"></span></td><td><strong>220</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="lede" style="margin-top:-4px">On divise par <span data-tex="3!=6"></span> car chaque groupe de 3 personnes peut être classé de 6 façons différentes (3 places pour la 1ère, 2 pour la 2e, 1 pour la 3e) — ces 6 podiums différents correspondent tous au même jury de 3.</p>
+
       <div class="card sage">
         <span class="tag">⭐ cas particuliers utiles</span>
-        <p><strong>Permutation</strong> (k = n, sans répétition) : ranger 5 livres différents sur une étagère → <span data-tex="5!=120"></span> façons.</p>
+        <p><strong>Permutation</strong> (k = n, sans répétition — on utilise TOUS les éléments) : ranger 5 livres différents sur une étagère → <span data-tex="5!=120"></span> façons.</p>
         <p><strong>Toutes les parties d'un ensemble</strong> à n éléments : <span data-tex="2^n"></span>. Exemple : 10 options indépendantes dans un fichier de config → <span data-tex="2^{10}=1024"></span> combinaisons à tester.</p>
       </div>
     </section>
